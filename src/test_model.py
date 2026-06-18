@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import pickle
 import cv2
+import time
 import numpy as np
 from random import shuffle
 import matplotlib.pyplot as plt
@@ -10,11 +11,11 @@ from cnn import CNN
 
 NUMBER_OF_CLASSES=10
 MODELS_DIR = "./models"
-MODEL = "very_small"
+MODEL = "big"
 DATA_DIR = "./CUB_200_2011/CUB_200_2011/images"
 TEST_IMAGES_NUM=100
 OWN_DATA_DIR= "./own_training_data"
-INPUT_SIZE=(224, 224)
+INPUT_SIZE=(64, 64)
 
 print(f"{'-'*5} Preparing dataset {'-'*5}")
 print(f"Data directory: {Path(DATA_DIR).resolve()}")
@@ -75,19 +76,27 @@ with open(f"{MODELS_DIR}/{MODEL}.pkl", "rb") as fh:
 
 print(f"{'-'*5} Test start {'-'*5}")
 num_correct = 0
+num_correct_own = 0
 predicted = []
 
+start = time.time_ns()
 for i, (label, image) in enumerate(zip(test_labels, test_images)):
     predicted_label = model.test(image)
     predicted.append(predicted_label)
     was_correct = predicted_label == label
     num_correct += 1 if was_correct else 0
+    if i >= len(shuffeled_labels):
+        num_correct_own += 1 if was_correct else 0
     print(f"[Step {i + 1}] Predicted: {label_to_class_name[predicted_label]} | Actual: {label_to_class_name[label]} | Hit?={'YES!' if was_correct else 'no'}")
+testing_time = time.time_ns() - start
+print(f"Test accuracy: {num_correct/len(test_labels) * 100:.0f}%")
+print(f"Test accuracy on own data: {num_correct_own/(len(test_labels) - len(shuffeled_labels)) * 100:.0f}%")
+print(f"Time taken to test: {testing_time / 1_000_000_000:.2f} seconds")
 
 confusion_matrix = []
-for i, true_label in enumerate(label_to_class_name):
+for i, _ in enumerate(label_to_class_name):
     confusion_matrix.append([0 for _ in range(NUMBER_OF_CLASSES)])
-    true_positions = [pos for pos, label in enumerate(test_labels) if label == true_label]
+    true_positions = [pos for pos, label in enumerate(test_labels) if label == i]
     for j in true_positions:
         confusion_matrix[i][predicted[j]] += 1
 

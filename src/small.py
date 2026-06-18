@@ -4,22 +4,18 @@ from evaluate import NUMBER_OF_CLASSES, train_and_test
 LEARNING_RATE=0.001
 
 cnn = CNN([
-    Conv2D(16, 3, kernel_size=3),    # 222x222x16
+    Conv2D(16, 3, kernel_size=3),    # 62x62x16
     ReLU(),
-    MaxPool2D(2),                    # 111x111x16
+    MaxPool2D(2),                    # 31x31x16
 
-    Conv2D(32, 16, kernel_size=3),   # 109x109x32
+    Conv2D(32, 16, kernel_size=3),   # 29x29x32
     ReLU(),
-    MaxPool2D(2),                    # 54x54x32
+    MaxPool2D(2),                    # 14x14x32
 
-    Conv2D(64, 32, kernel_size=3),   # 52x52x64
+    FCLayer(14 * 14 * 32, 128),
     ReLU(),
-    MaxPool2D(4),                    # 13x13x64
-
-    FCLayer(13 * 13 * 64, 128),
-    ReLU(),
-    Softmax(32, NUMBER_OF_CLASSES)
+    Softmax(128, NUMBER_OF_CLASSES)
 ], number_of_classes=NUMBER_OF_CLASSES, learning_rate=LEARNING_RATE)
 
 if __name__ == '__main__':
-    train_and_test(cnn, 'small', 8)
+    train_and_test(cnn, 'small')

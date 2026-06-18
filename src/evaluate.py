@@ -9,11 +9,12 @@ from pathlib import Path
 from datetime import datetime
 from copy import deepcopy
 
+MAX_EPOCHS=15
 NUMBER_OF_CLASSES=10
 DATA_DIR="./CUB_200_2011/CUB_200_2011/images"
 MODELS_DIR="./models"
 TRAIN_PERCENTAGE=90
-INPUT_SIZE=(224, 224)
+INPUT_SIZE=(64, 64)
 
 print(f"{'-'*5} Preparing dataset {'-'*5}")
 print(f"Data directory: {Path(DATA_DIR).resolve()}")
@@ -62,21 +63,21 @@ def augment(image: np.ndarray) -> np.ndarray:
     factor = np.random.uniform(0.8, 1.2)
     image = np.clip(image * factor, 0, 255).astype(np.uint8)
 
-    x = np.random.randint(0, 24)
-    y = np.random.randint(0, 24)
-    image = image[y:y+200, x:x+200]
-    image = cv2.resize(image, INPUT_SIZE, interpolation=cv2.INTER_LANCZOS4)
+    #x = np.random.randint(0, 24)
+    #y = np.random.randint(0, 24)
+    #image = image[y:y+200, x:x+200]
+    #image = cv2.resize(image, INPUT_SIZE, interpolation=cv2.INTER_LANCZOS4)
     return image
 
 def log(s: str):
     print(f"[{datetime.now().strftime('%H:%M:%S')}]{s}",)
 
-def train_and_test(cnn: CNN, model_name: str, epochs: int=5):
+def train_and_test(cnn: CNN, model_name: str):
     print(f"{'-'*5} Training started for model {model_name} {'-'*5}")
     accuracies = []
     models = []
 
-    for epoch in range(epochs):
+    for epoch in range(MAX_EPOCHS):
         print(f"{'-'*5} Epoch {epoch+1} {'-'*5}")
         total_loss = 0
         train_num_correct = 0
