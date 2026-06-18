@@ -4,16 +4,15 @@ import pickle
 import cv2
 import time
 import numpy as np
-from random import shuffle
+from random import shuffle, seed
 import matplotlib.pyplot as plt
 
 from cnn import CNN
 
 NUMBER_OF_CLASSES=10
 MODELS_DIR = "./models"
-MODEL = "big"
+MODEL = "medium"
 DATA_DIR = "./CUB_200_2011/CUB_200_2011/images"
-TEST_IMAGES_NUM=100
 OWN_DATA_DIR= "./own_training_data"
 INPUT_SIZE=(64, 64)
 
@@ -41,10 +40,10 @@ for class_name in paths[:NUMBER_OF_CLASSES]:
 print("")
 
 print(f"{'-'*5} Shuffled dataset contents {'-'*5}")
-print("Shuffling test images and restricting to 100")
+print(f"Shuffling test images")
 shuffelled_dataset = list(zip(dataset_labels, dataset_images))
 shuffle(shuffelled_dataset)
-shuffeled_labels, shuffeled_images = zip(*(shuffelled_dataset[:TEST_IMAGES_NUM]))
+shuffeled_labels, shuffeled_images = zip(*shuffelled_dataset)
 for i, class_name in enumerate(label_to_class_name):
     print(f"{class_name}: {len([x for x in shuffeled_labels if x == i])}")
 print("")
@@ -89,6 +88,7 @@ for i, (label, image) in enumerate(zip(test_labels, test_images)):
         num_correct_own += 1 if was_correct else 0
     print(f"[Step {i + 1}] Predicted: {label_to_class_name[predicted_label]} | Actual: {label_to_class_name[label]} | Hit?={'YES!' if was_correct else 'no'}")
 testing_time = time.time_ns() - start
+print(f"Predcited {num_correct}/{len(test_labels)}")
 print(f"Test accuracy: {num_correct/len(test_labels) * 100:.0f}%")
 print(f"Test accuracy on own data: {num_correct_own/(len(test_labels) - len(shuffeled_labels)) * 100:.0f}%")
 print(f"Time taken to test: {testing_time / 1_000_000_000:.2f} seconds")

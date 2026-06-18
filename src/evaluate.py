@@ -63,10 +63,6 @@ def augment(image: np.ndarray) -> np.ndarray:
     factor = np.random.uniform(0.8, 1.2)
     image = np.clip(image * factor, 0, 255).astype(np.uint8)
 
-    #x = np.random.randint(0, 24)
-    #y = np.random.randint(0, 24)
-    #image = image[y:y+200, x:x+200]
-    #image = cv2.resize(image, INPUT_SIZE, interpolation=cv2.INTER_LANCZOS4)
     return image
 
 def log(s: str):

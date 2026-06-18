@@ -1,7 +1,7 @@
 import numpy as np
 from copy import deepcopy
 
-DEFAULT_LR = 0.01
+DEFAULT_LR = 0.001
 
 class CNN:
 
