@@ -24,6 +24,7 @@ cnn = CNN([
     FCLayer(12 * 12 * 256, 512),
     ReLU(),
     FCLayer(512, 128),
+    ReLU(),
     Softmax(128, NUMBER_OF_CLASSES)
 ], number_of_classes=NUMBER_OF_CLASSES, learning_rate=LEARNING_RATE)
 
