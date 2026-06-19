@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 import pickle
 import cv2
@@ -11,10 +12,15 @@ from cnn import CNN
 
 NUMBER_OF_CLASSES=10
 MODELS_DIR = "./models"
-MODEL = "medium"
 DATA_DIR = "./CUB_200_2011/CUB_200_2011/images"
 OWN_DATA_DIR= "./own_training_data"
 INPUT_SIZE=(64, 64)
+
+if len(sys.argv) < 2:
+    print("Missing model name argument")
+    exit(1)
+
+model_name = sys.argv[1]
 
 print(f"{'-'*5} Preparing dataset {'-'*5}")
 print(f"Data directory: {Path(DATA_DIR).resolve()}")
@@ -69,8 +75,8 @@ for i, class_name in enumerate(label_to_class_name):
     print(f"{class_name}: {len([x for x in test_labels if x == i])}")
 print("")
 
-print(f"{'-'*5} Loading model {MODEL} from {MODELS_DIR}/{MODEL}.pkl {'-'*5}")
-with open(f"{MODELS_DIR}/{MODEL}.pkl", "rb") as fh:
+print(f"{'-'*5} Loading model {model_name} from {MODELS_DIR}/{model_name}.pkl {'-'*5}")
+with open(f"{MODELS_DIR}/{model_name}.pkl", "rb") as fh:
     model: CNN = pickle.load(fh)
 
 print(f"{'-'*5} Test start {'-'*5}")
@@ -131,5 +137,6 @@ for i in range(cm_array.shape[0]):
                 color="white" if cm_array[i, j] > thresh else "black")
 
 plt.tight_layout()
+plt.savefig(f"./images/{model_name}_confusion_matrix.png")
 plt.show()
 
