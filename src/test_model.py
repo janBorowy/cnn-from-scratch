@@ -12,7 +12,7 @@ from cnn import CNN
 
 NUMBER_OF_CLASSES=10
 MODELS_DIR = "./models"
-DATA_DIR = "./CUB_200_2011/CUB_200_2011/images"
+DATA_DIR = "./CUB_200_2011"
 OWN_DATA_DIR= "./own_training_data"
 INPUT_SIZE=(64, 64)
 

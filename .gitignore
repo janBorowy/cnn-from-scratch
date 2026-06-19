@@ -2,4 +2,3 @@
 .*
 __pycache__/
 !.gitignore
-CUB_200_2011/
